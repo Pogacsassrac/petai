@@ -1175,7 +1175,43 @@ https://github.com/Mintplex-Labs/anythingllm-embed/blob/main/README.md
   data-embed-id="b48f5a34-6a95-4fc7-b312-aae5dba0d74a"
   data-base-api-url="https://petai.hu/api/embed"
   src="https://petai.hu/embed/anythingllm-chat-widget.min.js"
+  data-button-color="#89c1b6"
+
   data-greeting="Kérlek vedd figyelembe, hogy csak 2025 decemberéig vannak adataim! A frissebb infokat keresd közvetlenül a weboldalon!">
 </script>
 <!-- AnythingLLM (https://anythingllm.com) -->
+
+<script>
+  function forceLogoReplace() {
+    // Megkeressük a fő widget elemet
+    const widget = document.getElementById('anythingllm-chat-widget');
+    if (!widget) return;
+
+    // A widget egy "Shadow Root" mögé rejti a tartalmát, ide kell "betörnünk"
+    const shadowRoot = widget.shadowRoot;
+    if (!shadowRoot) {
+      // Ha még nincs Shadow Root, várunk egy kicsit és újra próbáljuk
+      setTimeout(forceLogoReplace, 500);
+      return;
+    }
+
+    // A Shadow Root-on belül keressük meg a képet
+    // Az AnythingLLM widget általában egy <img> taget használ a logóhoz
+    const logo = shadowRoot.querySelector('img[alt="AnythingLLM Logo"]') || 
+                 shadowRoot.querySelector('img[src*="anythingllm"]');
+
+    if (logo) {
+      logo.src = "petriklogo.png";
+      logo.style.height = "35px"; // Beállítjuk a megfelelő méretet
+      logo.style.width = "auto";
+      console.log("Logó sikeresen kicserélve!");
+    } else {
+      // Ha még nem jött létre az img elem, 200ms múlva újra megnézzük
+      setTimeout(forceLogoReplace, 200);
+    }
+  }
+
+  // Elindítjuk a folyamatot, amikor az oldal betöltődött
+  window.addEventListener('load', forceLogoReplace);
+</script>
 </body></html>

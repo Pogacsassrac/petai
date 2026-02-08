@@ -1182,36 +1182,47 @@ https://github.com/Mintplex-Labs/anythingllm-embed/blob/main/README.md
 <!-- AnythingLLM (https://anythingllm.com) -->
 
 <script>
-  function forceLogoReplace() {
-    // Megkeressük a fő widget elemet
+  function customizeWidget() {
     const widget = document.getElementById('anythingllm-chat-widget');
     if (!widget) return;
 
-    // A widget egy "Shadow Root" mögé rejti a tartalmát, ide kell "betörnünk"
     const shadowRoot = widget.shadowRoot;
     if (!shadowRoot) {
-      // Ha még nincs Shadow Root, várunk egy kicsit és újra próbáljuk
-      setTimeout(forceLogoReplace, 500);
+      setTimeout(customizeWidget, 500);
       return;
     }
 
-    // A Shadow Root-on belül keressük meg a képet
-    // Az AnythingLLM widget általában egy <img> taget használ a logóhoz
+    // 1. LOGÓ CSERÉJE
     const logo = shadowRoot.querySelector('img[alt="AnythingLLM Logo"]') || 
                  shadowRoot.querySelector('img[src*="anythingllm"]');
-
     if (logo) {
-      logo.src = "https://pogacsassrac.github.io/petai/petriklogo.png";
-      logo.style.height = "35px"; // Beállítjuk a megfelelő méretet
+      logo.src = "https://pogacsassrac.github.io/petai/logod.png"; 
+      logo.style.height = "35px";
       logo.style.width = "auto";
-      console.log("Logó sikeresen kicserélve!");
-    } else {
-      // Ha még nem jött létre az img elem, 200ms múlva újra megnézzük
-      setTimeout(forceLogoReplace, 200);
+    }
+
+    // 2. "POWERED BY" ÉS "RESET CHAT" ELTÜNTETÉSE/MÓDOSÍTÁSA
+    // Megkeressük a láblécet a Shadow DOM-ban
+    const footerLinks = shadowRoot.querySelectorAll('a');
+    footerLinks.forEach(link => {
+      if (link.textContent.includes('Powered by AnythingLLM')) {
+        link.style.display = 'none'; // Teljesen elrejti a szöveget
+      }
+      // Ha a "Reset Chat"-et is le akarod fordítani magyarra:
+      if (link.textContent.includes('Reset Chat')) {
+        link.textContent = 'Beszélgetés törlése';
+        link.style.color = '#003366'; // Beállíthatod a Petrik-kék színt
+      }
+    });
+
+    // Ha még nem jöttek létre az elemek, futtassuk újra kicsit később
+    if (!logo || footerLinks.length === 0) {
+      setTimeout(customizeWidget, 500);
     }
   }
 
-  // Elindítjuk a folyamatot, amikor az oldal betöltődött
-  window.addEventListener('load', forceLogoReplace);
+  // Figyeljük a betöltést
+  window.addEventListener('load', customizeWidget);
 </script>
+
 </body></html>
